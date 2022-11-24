@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package kenda.types;
+option go_package="gitlab.kenda.com.tw/kenda/mesync/pkg/protobuf/kenda/types";
+
+// Decimal is a substitution of the numeric, including float, double, int32, int64.
+message Decimal {
+    string value = 1;
+}
+
+message ExpDecimal{
+    int64 value = 1;
+    int32 exp   = 2;
+}

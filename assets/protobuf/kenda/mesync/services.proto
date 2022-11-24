@@ -1,0 +1,262 @@
+syntax = "proto3";
+
+package kenda.mesync;
+option go_package="gitlab.kenda.com.tw/kenda/mesync/pkg/protobuf/kenda/mesync";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+import "kenda/mesync/user.proto";
+import "kenda/mesync/department.proto";
+import "kenda/mesync/station.proto";
+import "kenda/mesync/plan.proto";
+import "kenda/mesync/record.proto";
+import "kenda/mesync/recipe.proto";
+import "kenda/mesync/limitary_hour.proto";
+
+service Mesync {
+    // Check server status
+    //
+    // To make sure server is active based on http.StatusCode.
+    rpc CheckServer(google.protobuf.Empty) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            get : "/ping"
+        };
+    };
+
+    // 新增人員
+    //
+    //  - 檢查使用者 id 是否重複
+    //  - 檢查 departmentID 是否有維護部門資料
+    //  - 建立使用者
+    // Required:
+    //  - id
+    //  - departmentID
+    rpc CreateUsers(CreateUsersRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post : "/users"
+            body : "*"
+        };
+    };
+
+    // 更新人員
+    //
+    //  - 檢查使用者 id 是否重複
+    //  - 有給departmentID 檢查是否有維護部門資料
+    //  - 更新人員部門代號 or 離職日
+    // Required:
+    //  - id
+    //  - department_id, leave_date(MUST be in UTC locale) 至少選擇一個更新項目
+    rpc UpdateUser(UpdateUserRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            put : "/users/{id}"
+            body : "*"
+        };
+    };
+
+    // 刪除人員
+    //
+    //  - 刪除指定工號/帳號資料
+    // Required:
+    //  - id
+    rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete : "/user/{id}"
+        };
+    };
+
+    // 新增部門
+    //
+    //  - 檢查部門 id 是否重複
+    //  - 新增部門資訊
+    // Required:
+    //  - id
+    rpc CreateDepartments(Departments) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post : "/departments"
+            body : "*"
+        };
+    };
+
+    // 修改部門
+    //
+    //  - 檢查部門 id 是否存在
+    //  - 更新部門代號
+    // Required:
+    //  - id
+    //  - newID
+    rpc UpdateDepartment(UpdateDepartmentRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            put : "/department/{id}"
+            body : "new_id"
+        };
+    };
+
+    // 刪除部門
+    //
+    // Required:
+    //  - id
+    rpc DeleteDepartment(DeleteDepartmentRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete : "/department/{id}"
+        };
+    };
+
+    // 新增機台群組
+    //
+    //  - 檢查群組 id 是否重複
+    //  - 檢查機台是否存在
+    //  - 新增群組
+    // Required:
+    //  - id
+    //  - info.stations
+    rpc CreateStationGroup(CreateStationGroupRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post : "/station-group"
+            body : "*"
+        };
+    };
+
+    // 更新機台群組
+    //
+    //  - 檢查群組 id 是否存在
+    //  - 檢查更新機台是否存在
+    //  - 更新群組
+    // Required:
+    //  - id
+    //  - info.stations
+    rpc UpdateStationGroup(UpdateStationGroupRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            put : "/station-group/{id}"
+            body : "info"
+        };
+    };
+
+    // 刪除機台群組
+    //
+    //  - 刪除群組
+    // Required:
+    //  - id
+    rpc DeleteStationGroup(DeleteStationGroupRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete : "/station-group/{id}"
+        };
+    };
+
+    // Creates a new product plan
+    //
+    // DO:
+    // 1. check if departmentID and productID are existed
+    // 2. quantity = day quantity, must be greater than zero
+    // 3. check if the request's productID has already been created on the request's date & departmentID
+    // 4. create plan.
+    //
+    // @Param: CreatePlanRequest as plan info, all fields are required.
+    // The date field in CreatePlanRequest MUST be in UTC locale.
+    rpc CreateProductPlan(CreatePlanRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/plan"
+            body: "*"
+        };
+    };
+
+    // 查詢產品投入紀錄
+    //
+    //  - 檢查指定部門是否存在
+    //  - 取得該部門在指定日期下的生產投料紀錄
+    // Required:
+    //  - date (MUST be in UTC locale)
+    //  - departmentID
+    rpc ListFeedRecords(ListRecordsRequest) returns (ListFeedRecordsReply) {
+        option (google.api.http) = {
+            post : "/feed-records"
+            body : "*"
+        };
+    };
+
+    // 查詢產品產出紀錄
+    //
+    //  - 檢查指定部門是否存在
+    //  - 取得該部門在指定日期下的產品生產紀錄
+    // Required:
+    //  - date (MUST be in UTC locale)
+    //  - departmentID
+    rpc ListCollectRecords(ListRecordsRequest) returns (ListCollectRecordsReply) {
+        option (google.api.http) = {
+            post : "/collect-records"
+            body : "*"
+        };
+    };
+
+    // 新增多筆配合配方表
+    //
+    // @Param: all fields are required.
+    // 若生產批量為非固定值, 允許給空字串, 表示為由派發人員決定生產批量的值.
+    rpc CreateRecipes(CreateRecipesRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/recipes"
+            body: "*"
+        };
+    };
+    // 刪除指定配合配方表
+    //
+    // ids is required.
+    rpc DeleteRecipes(DeleteRecipesRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            // because of the recipe id with slash sign, we use POST method to handle
+            // the request.
+            post : "/recipes/delete"
+            body: "*"
+        };
+    };
+
+    // Make materials as substitutions of the given material
+    //
+    // All fields are required, except material.grade field.
+    rpc CreateSubstitutes(CreateSubstitutionRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/substitution"
+            body: "*"
+        };
+    };
+    // Update substitutions of the given material
+    //
+    // Make materials as substitutions of the given material if there is no substitution
+    // of the given material. Or, replace substitutions of the given material.
+    // All fields are required, except material.grade field.
+    rpc UpdateSubstitutes(UpdateSubstitutionRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            put: "/substitution"
+            body: "*"
+        };
+    };
+    // Delete substitutions of the given material
+    //
+    // If:
+    //  - 'all' field is true, all of substitutions will be deleted.
+    //  - 'multiple' field is set, the given substitutions will be deleted.
+    //
+    // It returns no error even if the given material has no substitution or substitutions
+    // doesn't match any of substitutions of the given material.
+    rpc DeleteSubstitution(DeleteSubstitutionRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete : "/substitution"
+            body: "*"
+        };
+    };
+
+    // Create a new Limitary-Hour
+    // 
+    // Required:
+    //  - productType
+    //
+    // Note:
+    //  - MIN and MAX must be greater than 0
+    //  - MIN must be less than MAX
+    rpc CreateLimitaryHour(CreateLimitaryHourRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post : "/limitary-hour"
+            body: "*"
+        };
+    };
+}

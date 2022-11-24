@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package kenda.mesync;
+option go_package="gitlab.kenda.com.tw/kenda/mesync/pkg/protobuf/kenda/mesync";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+import "kenda/mesync/blob.proto";
+
+service Cloud {
+    // Uploading production parameters to blob storage.
+    // You should call this function after sorting the request by time.
+    rpc UploadBlob(stream UploadBlobRequest) returns(google.protobuf.Empty){
+        option (google.api.http) = {
+            post : "/cloud/blob-storage"
+            body: "*"
+        };
+    };
+}

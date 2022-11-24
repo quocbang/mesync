@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package kenda.mesync;
+option go_package="gitlab.kenda.com.tw/kenda/mesync/pkg/protobuf/kenda/mesync";
+
+message LimitaryHour {
+    string product_type = 1;
+    LimitaryHourParameter limitary_hour = 2;
+}
+
+message LimitaryHourParameter {
+    int32 min = 1;
+    int32 max = 2;
+}
+
+message CreateLimitaryHourRequest {
+    repeated LimitaryHour limitary_hour = 1;
+}

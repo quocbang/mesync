@@ -1,0 +1,147 @@
+syntax = "proto3";
+
+package kenda.mesync;
+option go_package="gitlab.kenda.com.tw/kenda/mesync/pkg/protobuf/kenda/mesync";
+
+import "kenda/types/types.proto";
+import "google/protobuf/timestamp.proto";
+
+message RecipePropertyParameter {
+  kenda.types.Decimal high = 1;
+  kenda.types.Decimal mid  = 2;
+  kenda.types.Decimal low  = 3;
+  string              unit = 4;
+}
+
+message RecipeProperty {
+  string                  name  = 1;
+  RecipePropertyParameter param = 2;
+}
+
+message RecipeMaterialParameter {
+  kenda.types.Decimal high = 1;
+  kenda.types.Decimal mid  = 2;
+  kenda.types.Decimal low  = 3;
+  string              unit = 4;
+}
+
+message RecipeMaterial {
+  string                  name               = 1;
+  string                  type               = 2; // product type
+  string                  grade              = 3;
+  RecipeMaterialParameter value              = 4;
+  string                  site               = 5;
+  string                  required_recipe_id = 6;
+}
+
+message RecipeProcessStep {
+  repeated RecipeMaterial materials    = 1;
+  repeated RecipeProperty controls     = 2;
+  repeated RecipeProperty measurements = 3;
+}
+
+message RecipeTool {
+  string type     = 1; // tool type
+  string id       = 2;
+  bool   required = 3;
+}
+
+message RecipeProcessConfig {
+  repeated string     stations   = 1;
+  kenda.types.Decimal batch_size = 2;
+  // It is UOM for the product.
+  string                     unit               = 3;
+  repeated RecipeTool        tools              = 4;
+  repeated RecipeProcessStep steps              = 5;
+  repeated RecipeProperty    commons_controls   = 6;
+  repeated RecipeProperty    commons_properties = 7;
+}
+
+message OutputProduct {
+  string id   = 1;
+  string type = 2; // product type
+}
+
+message OptionalFlow {
+  string name = 1;
+  // OIDs are relative to ProcessDefinition.oid.
+  repeated string process_oids    = 2;
+  int32           max_repetitions = 3;
+}
+
+message Process {
+  // The OID is relative to ProcessDefinition.oid.
+  string                reference_oid  = 1;
+  repeated OptionalFlow optional_flows = 2;
+}
+
+message RecipeVersion {
+  string                    major = 1;
+  string                    minor = 2;
+  string                    stage = 3;
+  google.protobuf.Timestamp released_at = 4;
+}
+
+message Recipe {
+  string                     id           = 1;
+  string                     product_type = 2;
+  string                     product_id   = 3;
+  RecipeVersion              version      = 4;
+  repeated Process           processes    = 5;
+  repeated ProcessDefinition process_defs = 6;
+}
+
+message ProcessDefinition {
+  string                       oid     = 1;
+  string                       name    = 2;
+  string                       type    = 3; // process type
+  repeated RecipeProcessConfig configs = 4;
+  OutputProduct                product = 5;
+  ProductValidPeriodConfig     ProductValidPeriod = 6;
+}
+
+message CreateRecipesRequest {
+  repeated Recipe recipes = 1;
+}
+
+message DeleteRecipesRequest {
+  repeated string ids = 1;
+}
+
+message Material {
+  // id 材料代號
+  string id    = 1;
+  string grade = 2;
+}
+
+message Substitutions {
+  Material            material   = 1;
+  kenda.types.Decimal proportion = 2;
+}
+
+message CreateSubstitutionRequest {
+  Material               material      = 1;
+  repeated Substitutions substitutions = 2;
+}
+
+message UpdateSubstitutionRequest {
+  Material               material      = 1;
+  repeated Substitutions substitutions = 2;
+}
+
+message DeleteSubstitutionRequest {
+  Material material = 1;
+
+  message Batch {
+    repeated Material substitutions = 1;
+  }
+  oneof type {
+    bool  all      = 2;
+    Batch multiple = 3;
+  }
+}
+
+message ProductValidPeriodConfig {
+  int32 standing = 1;
+  int32 expiry   = 2;
+}

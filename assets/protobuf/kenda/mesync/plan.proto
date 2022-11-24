@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package kenda.mesync;
+option go_package="gitlab.kenda.com.tw/kenda/mesync/pkg/protobuf/kenda/mesync";
+
+import "google/protobuf/timestamp.proto";
+
+import "kenda/types/types.proto";
+
+message Product {
+    string id   = 1;
+    string type = 2;
+}
+
+message CreatePlanRequest {
+    google.protobuf.Timestamp date          = 1;
+    Product                   product       = 2;
+    string                    department_id = 3;
+    kenda.types.Decimal       quantity      = 4;
+}

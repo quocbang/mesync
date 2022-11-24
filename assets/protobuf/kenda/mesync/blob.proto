@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "kenda/types/types.proto";
+
+package kenda.mesync;
+option go_package="gitlab.kenda.com.tw/kenda/mesync/pkg/protobuf/kenda/mesync";
+
+message UploadBlobRequest{
+    repeated PerUploadBlobRequest detail            = 1;
+    string                        station_id        = 2;
+    int32                         batch             = 3;
+    repeated string               parameters_header = 4;
+    repeated string               resources         = 5;
+}
+
+message PerUploadBlobRequest {
+    google.protobuf.Timestamp date_time              = 1;
+    ManufactureParameters     manufacture_parameters = 2;
+}
+
+message ManufactureParametersValue{
+    oneof oneof_name{
+        string                  string_value  = 1;
+        kenda.types.ExpDecimal  decimal_value = 2;
+    }
+}
+
+// This structure is used for uploading to the cloud
+message BlobStoreFile{
+    StationParameters parameters = 1;
+    string            station_id = 2;
+    int32             batch      = 3;
+    repeated string   resources  = 4;
+}
+
+message StationParameters{
+    repeated BlobUnitFile details           = 1;
+    repeated string       parameters_header = 2;
+}
+
+message BlobUnitFile{
+    google.protobuf.Timestamp date_time              = 1;
+    ManufactureParameters     manufacture_parameters = 2;
+}
+
+message ManufactureParameters{
+    repeated ManufactureParametersValue value = 1;
+}

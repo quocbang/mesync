@@ -1,0 +1,126 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "kenda/mesync/cloud.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/cloud/blob-storage": {
+      "post": {
+        "summary": "Uploading production parameters to blob storage.\nYou should call this function after sorting the request by time.",
+        "operationId": "UploadBlob",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " (streaming inputs)",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncUploadBlobRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Cloud"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "mesyncManufactureParameters": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncManufactureParametersValue"
+          }
+        }
+      }
+    },
+    "mesyncManufactureParametersValue": {
+      "type": "object",
+      "properties": {
+        "string_value": {
+          "type": "string"
+        },
+        "decimal_value": {
+          "$ref": "#/definitions/typesExpDecimal"
+        }
+      }
+    },
+    "mesyncPerUploadBlobRequest": {
+      "type": "object",
+      "properties": {
+        "date_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "manufacture_parameters": {
+          "$ref": "#/definitions/mesyncManufactureParameters"
+        }
+      }
+    },
+    "mesyncUploadBlobRequest": {
+      "type": "object",
+      "properties": {
+        "detail": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncPerUploadBlobRequest"
+          }
+        },
+        "station_id": {
+          "type": "string"
+        },
+        "batch": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "parameters_header": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "typesExpDecimal": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "int64"
+        },
+        "exp": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  }
+}

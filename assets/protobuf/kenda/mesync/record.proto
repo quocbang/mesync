@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package kenda.mesync;
+option go_package="gitlab.kenda.com.tw/kenda/mesync/pkg/protobuf/kenda/mesync";
+
+import "google/protobuf/timestamp.proto";
+
+import "kenda/types/types.proto";
+
+message ListRecordsRequest {
+    google.protobuf.Timestamp date          = 1;
+    string                    department_id = 2;
+}
+
+message Site {
+    string name  = 1;
+    int32  index = 2;
+}
+
+message FeedMaterials {
+    string              id          = 1;
+    string              grade       = 2;
+    string              resource_id = 3;
+    kenda.types.Decimal quantity    = 4;
+    Site                site        = 5;
+}
+
+message FeedRecord {
+    string work_order = 1;
+    string recipe_id  = 2;
+    int32  batch      = 3;
+    reserved 4; // product_id
+    string station_id = 5;
+
+    repeated FeedMaterials materials = 6;
+}
+
+message FactoryFeedRecord {
+    string              factory_id = 1;
+    repeated FeedRecord records    = 2;
+}
+
+message ListFeedRecordsReply {
+    repeated FactoryFeedRecord records = 1;
+}
+
+message CollectRecord {
+    string              resource_id = 1;
+    string              work_order  = 2;
+    string              recipe_id   = 3;
+    string              product_id  = 4;
+    reserved 5; // carrier
+    kenda.types.Decimal quantity    = 6;
+}
+
+message FactoryCollectRecord {
+    string                 factory_id = 1;
+    repeated CollectRecord records    = 2;
+}
+
+message ListCollectRecordsReply {
+    repeated FactoryCollectRecord records = 1;
+}

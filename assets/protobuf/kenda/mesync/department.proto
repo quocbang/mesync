@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package kenda.mesync;
+option go_package="gitlab.kenda.com.tw/kenda/mesync/pkg/protobuf/kenda/mesync";
+
+message Departments {
+    repeated string ids = 1;
+}
+
+message UpdateDepartmentRequest {
+    string id     = 1;
+    string new_id = 2;
+}
+
+message DeleteDepartmentRequest{
+    string id = 1;
+}

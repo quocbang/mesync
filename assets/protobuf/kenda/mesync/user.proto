@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package kenda.mesync;
+option go_package="gitlab.kenda.com.tw/kenda/mesync/pkg/protobuf/kenda/mesync";
+
+import "google/protobuf/timestamp.proto";
+
+message UserInfo{
+    // id 通常為工號
+    string id            = 1;
+    string account       = 2;
+    string department_id = 3;
+}
+
+message CreateUsersRequest {
+    repeated UserInfo users = 1;
+}
+
+message UpdateUserRequest {
+    string                    id            = 1;
+    string                    account       = 2;
+    string                    department_id = 3;
+    google.protobuf.Timestamp leave_date    = 4;
+}
+
+message DeleteUserRequest {
+    string id = 1;
+}

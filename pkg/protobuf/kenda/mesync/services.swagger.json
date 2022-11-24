@@ -1,0 +1,1213 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "kenda/mesync/services.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/collect-records": {
+      "post": {
+        "summary": "查詢產品產出紀錄",
+        "description": "- 檢查指定部門是否存在\n - 取得該部門在指定日期下的產品生產紀錄\nRequired:\n - date (MUST be in UTC locale)\n - departmentID",
+        "operationId": "ListCollectRecords",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/mesyncListCollectRecordsReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncListRecordsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      }
+    },
+    "/department/{id}": {
+      "delete": {
+        "summary": "刪除部門",
+        "description": "Required:\n - id",
+        "operationId": "DeleteDepartment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      },
+      "put": {
+        "summary": "修改部門",
+        "description": "- 檢查部門 id 是否存在\n - 更新部門代號\nRequired:\n - id\n - newID",
+        "operationId": "UpdateDepartment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      }
+    },
+    "/departments": {
+      "post": {
+        "summary": "新增部門",
+        "description": "- 檢查部門 id 是否重複\n - 新增部門資訊\nRequired:\n - id",
+        "operationId": "CreateDepartments",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncDepartments"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      }
+    },
+    "/feed-records": {
+      "post": {
+        "summary": "查詢產品投入紀錄",
+        "description": "- 檢查指定部門是否存在\n - 取得該部門在指定日期下的生產投料紀錄\nRequired:\n - date (MUST be in UTC locale)\n - departmentID",
+        "operationId": "ListFeedRecords",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/mesyncListFeedRecordsReply"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncListRecordsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      }
+    },
+    "/limitary-hour": {
+      "post": {
+        "summary": "Create a new Limitary-Hour",
+        "description": "Required:\n - productType\n\nNote:\n - MIN and MAX must be greater than 0\n - MIN must be less than MAX",
+        "operationId": "CreateLimitaryHour",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncCreateLimitaryHourRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      }
+    },
+    "/ping": {
+      "get": {
+        "summary": "Check server status",
+        "description": "To make sure server is active based on http.StatusCode.",
+        "operationId": "CheckServer",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "tags": [
+          "Mesync"
+        ]
+      }
+    },
+    "/plan": {
+      "post": {
+        "summary": "Creates a new product plan",
+        "description": "DO:\n1. check if departmentID and productID are existed\n2. quantity = day quantity, must be greater than zero\n3. check if the request's productID has already been created on the request's date \u0026 departmentID\n4. create plan.\n\n@Param: CreatePlanRequest as plan info, all fields are required.\nThe date field in CreatePlanRequest MUST be in UTC locale.",
+        "operationId": "CreateProductPlan",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncCreatePlanRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      }
+    },
+    "/recipes": {
+      "post": {
+        "summary": "新增多筆配合配方表",
+        "description": "@Param: all fields are required.\n若生產批量為非固定值, 允許給空字串, 表示為由派發人員決定生產批量的值.",
+        "operationId": "CreateRecipes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncCreateRecipesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      }
+    },
+    "/recipes/delete": {
+      "post": {
+        "summary": "刪除指定配合配方表",
+        "description": "ids is required.",
+        "operationId": "DeleteRecipes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncDeleteRecipesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      }
+    },
+    "/station-group": {
+      "post": {
+        "summary": "新增機台群組",
+        "description": "- 檢查群組 id 是否重複\n - 檢查機台是否存在\n - 新增群組\nRequired:\n - id\n - info.stations",
+        "operationId": "CreateStationGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncCreateStationGroupRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      }
+    },
+    "/station-group/{id}": {
+      "delete": {
+        "summary": "刪除機台群組",
+        "description": "- 刪除群組\nRequired:\n - id",
+        "operationId": "DeleteStationGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      },
+      "put": {
+        "summary": "更新機台群組",
+        "description": "- 檢查群組 id 是否存在\n - 檢查更新機台是否存在\n - 更新群組\nRequired:\n - id\n - info.stations",
+        "operationId": "UpdateStationGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncStationGroupInformation"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      }
+    },
+    "/substitution": {
+      "delete": {
+        "summary": "Delete substitutions of the given material",
+        "description": "If:\n - 'all' field is true, all of substitutions will be deleted.\n - 'multiple' field is set, the given substitutions will be deleted.\n\nIt returns no error even if the given material has no substitution or substitutions\ndoesn't match any of substitutions of the given material.",
+        "operationId": "DeleteSubstitution",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncDeleteSubstitutionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      },
+      "post": {
+        "summary": "Make materials as substitutions of the given material",
+        "description": "All fields are required, except material.grade field.",
+        "operationId": "CreateSubstitutes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncCreateSubstitutionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      },
+      "put": {
+        "summary": "Update substitutions of the given material",
+        "description": "Make materials as substitutions of the given material if there is no substitution\nof the given material. Or, replace substitutions of the given material.\nAll fields are required, except material.grade field.",
+        "operationId": "UpdateSubstitutes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncUpdateSubstitutionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      }
+    },
+    "/user/{id}": {
+      "delete": {
+        "summary": "刪除人員",
+        "description": "- 刪除指定工號/帳號資料\nRequired:\n - id",
+        "operationId": "DeleteUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      }
+    },
+    "/users": {
+      "post": {
+        "summary": "新增人員",
+        "description": "- 檢查使用者 id 是否重複\n - 檢查 departmentID 是否有維護部門資料\n - 建立使用者\nRequired:\n - id\n - departmentID",
+        "operationId": "CreateUsers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncCreateUsersRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "put": {
+        "summary": "更新人員",
+        "description": "- 檢查使用者 id 是否重複\n - 有給departmentID 檢查是否有維護部門資料\n - 更新人員部門代號 or 離職日\nRequired:\n - id\n - department_id, leave_date(MUST be in UTC locale) 至少選擇一個更新項目",
+        "operationId": "UpdateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/mesyncUpdateUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Mesync"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "DeleteSubstitutionRequestBatch": {
+      "type": "object",
+      "properties": {
+        "substitutions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncMaterial"
+          }
+        }
+      }
+    },
+    "mesyncCollectRecord": {
+      "type": "object",
+      "properties": {
+        "resource_id": {
+          "type": "string"
+        },
+        "work_order": {
+          "type": "string"
+        },
+        "recipe_id": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "quantity": {
+          "$ref": "#/definitions/typesDecimal"
+        }
+      }
+    },
+    "mesyncCreateLimitaryHourRequest": {
+      "type": "object",
+      "properties": {
+        "limitary_hour": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncLimitaryHour"
+          }
+        }
+      }
+    },
+    "mesyncCreatePlanRequest": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "product": {
+          "$ref": "#/definitions/mesyncProduct"
+        },
+        "department_id": {
+          "type": "string"
+        },
+        "quantity": {
+          "$ref": "#/definitions/typesDecimal"
+        }
+      }
+    },
+    "mesyncCreateRecipesRequest": {
+      "type": "object",
+      "properties": {
+        "recipes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncRecipe"
+          }
+        }
+      }
+    },
+    "mesyncCreateStationGroupRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "info": {
+          "$ref": "#/definitions/mesyncStationGroupInformation"
+        }
+      }
+    },
+    "mesyncCreateSubstitutionRequest": {
+      "type": "object",
+      "properties": {
+        "material": {
+          "$ref": "#/definitions/mesyncMaterial"
+        },
+        "substitutions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncSubstitutions"
+          }
+        }
+      }
+    },
+    "mesyncCreateUsersRequest": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncUserInfo"
+          }
+        }
+      }
+    },
+    "mesyncDeleteRecipesRequest": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "mesyncDeleteSubstitutionRequest": {
+      "type": "object",
+      "properties": {
+        "material": {
+          "$ref": "#/definitions/mesyncMaterial"
+        },
+        "all": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "multiple": {
+          "$ref": "#/definitions/DeleteSubstitutionRequestBatch"
+        }
+      }
+    },
+    "mesyncDepartments": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "mesyncFactoryCollectRecord": {
+      "type": "object",
+      "properties": {
+        "factory_id": {
+          "type": "string"
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncCollectRecord"
+          }
+        }
+      }
+    },
+    "mesyncFactoryFeedRecord": {
+      "type": "object",
+      "properties": {
+        "factory_id": {
+          "type": "string"
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncFeedRecord"
+          }
+        }
+      }
+    },
+    "mesyncFeedMaterials": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "grade": {
+          "type": "string"
+        },
+        "resource_id": {
+          "type": "string"
+        },
+        "quantity": {
+          "$ref": "#/definitions/typesDecimal"
+        },
+        "site": {
+          "$ref": "#/definitions/mesyncSite"
+        }
+      }
+    },
+    "mesyncFeedRecord": {
+      "type": "object",
+      "properties": {
+        "work_order": {
+          "type": "string"
+        },
+        "recipe_id": {
+          "type": "string"
+        },
+        "batch": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "station_id": {
+          "type": "string"
+        },
+        "materials": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncFeedMaterials"
+          }
+        }
+      }
+    },
+    "mesyncLimitaryHour": {
+      "type": "object",
+      "properties": {
+        "product_type": {
+          "type": "string"
+        },
+        "limitary_hour": {
+          "$ref": "#/definitions/mesyncLimitaryHourParameter"
+        }
+      }
+    },
+    "mesyncLimitaryHourParameter": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "max": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "mesyncListCollectRecordsReply": {
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncFactoryCollectRecord"
+          }
+        }
+      }
+    },
+    "mesyncListFeedRecordsReply": {
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncFactoryFeedRecord"
+          }
+        }
+      }
+    },
+    "mesyncListRecordsRequest": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "department_id": {
+          "type": "string"
+        }
+      }
+    },
+    "mesyncMaterial": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "id 材料代號"
+        },
+        "grade": {
+          "type": "string"
+        }
+      }
+    },
+    "mesyncOptionalFlow": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "process_oids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "OIDs are relative to ProcessDefinition.oid."
+        },
+        "max_repetitions": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "mesyncOutputProduct": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "mesyncProcess": {
+      "type": "object",
+      "properties": {
+        "reference_oid": {
+          "type": "string",
+          "description": "The OID is relative to ProcessDefinition.oid."
+        },
+        "optional_flows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncOptionalFlow"
+          }
+        }
+      }
+    },
+    "mesyncProcessDefinition": {
+      "type": "object",
+      "properties": {
+        "oid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "configs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncRecipeProcessConfig"
+          }
+        },
+        "product": {
+          "$ref": "#/definitions/mesyncOutputProduct"
+        },
+        "ProductValidPeriod": {
+          "$ref": "#/definitions/mesyncProductValidPeriodConfig"
+        }
+      }
+    },
+    "mesyncProduct": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "mesyncProductValidPeriodConfig": {
+      "type": "object",
+      "properties": {
+        "standing": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "expiry": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "mesyncRecipe": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "product_type": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "version": {
+          "$ref": "#/definitions/mesyncRecipeVersion"
+        },
+        "processes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncProcess"
+          }
+        },
+        "process_defs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncProcessDefinition"
+          }
+        }
+      }
+    },
+    "mesyncRecipeMaterial": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "grade": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/definitions/mesyncRecipeMaterialParameter"
+        },
+        "site": {
+          "type": "string"
+        },
+        "required_recipe_id": {
+          "type": "string"
+        }
+      }
+    },
+    "mesyncRecipeMaterialParameter": {
+      "type": "object",
+      "properties": {
+        "high": {
+          "$ref": "#/definitions/typesDecimal"
+        },
+        "mid": {
+          "$ref": "#/definitions/typesDecimal"
+        },
+        "low": {
+          "$ref": "#/definitions/typesDecimal"
+        },
+        "unit": {
+          "type": "string"
+        }
+      }
+    },
+    "mesyncRecipeProcessConfig": {
+      "type": "object",
+      "properties": {
+        "stations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "batch_size": {
+          "$ref": "#/definitions/typesDecimal"
+        },
+        "unit": {
+          "type": "string",
+          "description": "It is UOM for the product."
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncRecipeTool"
+          }
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncRecipeProcessStep"
+          }
+        },
+        "commons_controls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncRecipeProperty"
+          }
+        },
+        "commons_properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncRecipeProperty"
+          }
+        }
+      }
+    },
+    "mesyncRecipeProcessStep": {
+      "type": "object",
+      "properties": {
+        "materials": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncRecipeMaterial"
+          }
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncRecipeProperty"
+          }
+        },
+        "measurements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncRecipeProperty"
+          }
+        }
+      }
+    },
+    "mesyncRecipeProperty": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "param": {
+          "$ref": "#/definitions/mesyncRecipePropertyParameter"
+        }
+      }
+    },
+    "mesyncRecipePropertyParameter": {
+      "type": "object",
+      "properties": {
+        "high": {
+          "$ref": "#/definitions/typesDecimal"
+        },
+        "mid": {
+          "$ref": "#/definitions/typesDecimal"
+        },
+        "low": {
+          "$ref": "#/definitions/typesDecimal"
+        },
+        "unit": {
+          "type": "string"
+        }
+      }
+    },
+    "mesyncRecipeTool": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
+    },
+    "mesyncRecipeVersion": {
+      "type": "object",
+      "properties": {
+        "major": {
+          "type": "string"
+        },
+        "minor": {
+          "type": "string"
+        },
+        "stage": {
+          "type": "string"
+        },
+        "released_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "mesyncSite": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "index": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "mesyncStationGroupInformation": {
+      "type": "object",
+      "properties": {
+        "stations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "mesyncSubstitutions": {
+      "type": "object",
+      "properties": {
+        "material": {
+          "$ref": "#/definitions/mesyncMaterial"
+        },
+        "proportion": {
+          "$ref": "#/definitions/typesDecimal"
+        }
+      }
+    },
+    "mesyncUpdateSubstitutionRequest": {
+      "type": "object",
+      "properties": {
+        "material": {
+          "$ref": "#/definitions/mesyncMaterial"
+        },
+        "substitutions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mesyncSubstitutions"
+          }
+        }
+      }
+    },
+    "mesyncUpdateUserRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "account": {
+          "type": "string"
+        },
+        "department_id": {
+          "type": "string"
+        },
+        "leave_date": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "mesyncUserInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "id 通常為工號"
+        },
+        "account": {
+          "type": "string"
+        },
+        "department_id": {
+          "type": "string"
+        }
+      }
+    },
+    "typesDecimal": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      },
+      "description": "Decimal is a substitution of the numeric, including float, double, int32, int64."
+    }
+  }
+}

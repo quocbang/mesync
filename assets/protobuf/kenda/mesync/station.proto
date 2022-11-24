@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package kenda.mesync;
+option go_package="gitlab.kenda.com.tw/kenda/mesync/pkg/protobuf/kenda/mesync";
+
+message StationGroupInformation {
+    repeated string stations = 1;
+}
+
+message CreateStationGroupRequest {
+    string                  id   = 1;
+    StationGroupInformation info = 2;
+}
+
+message UpdateStationGroupRequest {
+    string                  id   = 1;
+    StationGroupInformation info = 2;
+}
+
+message DeleteStationGroupRequest{
+    string id = 1;
+}
